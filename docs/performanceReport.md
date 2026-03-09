@@ -1,10 +1,10 @@
 1. ## 📊 Query Performance Report
 
-- 🧪 **Query**: `db.restaurants.find().pretty()`
+- 🧪 **Query**: `db.restaurants.find({}, { _id: 0 }).pretty()`
 - ⏱️ **Execution time**: 0 ms
 - 📚 **Documents returned**: 664
 - 🔍 **Documents examined**: 664
-- 🛠️ **Execution stage**: COLLSCAN
+- 🛠️ **Execution stage**: PROJECTION_SIMPLE
 
 ## ✅ No significant issues detected
 
@@ -12,7 +12,7 @@
 2. ## 📊 Query Performance Report
 
 - 🧪 **Query**: `db.restaurants.find({}, { _id: 0, restaurant_id: 1, name: 1 })`
-- ⏱️ **Execution time**: 1 ms
+- ⏱️ **Execution time**: 0 ms
 - 📚 **Documents returned**: 664
 - 🔍 **Documents examined**: 664
 - 🛠️ **Execution stage**: PROJECTION_SIMPLE
@@ -23,7 +23,7 @@
 3. ## 📊 Query Performance Report
 
 - 🧪 **Query**: `db.restaurants.find({}, { _id: 0, restaurant_id: 1, name: 1, borough: 1, cuisine: 1 })`
-- ⏱️ **Execution time**: 1 ms
+- ⏱️ **Execution time**: 0 ms
 - 📚 **Documents returned**: 664
 - 🔍 **Documents examined**: 664
 - 🛠️ **Execution stage**: PROJECTION_SIMPLE
@@ -44,11 +44,11 @@
 
 5. ## 📊 Query Performance Report
 
-- 🧪 **Query**: `db.restaurants.find({ borough: "Bronx" })`
-- ⏱️ **Execution time**: 1 ms
+- 🧪 **Query**: `db.restaurants.find({ borough: "Bronx" }, { _id: 0 })`
+- ⏱️ **Execution time**: 0 ms
 - 📚 **Documents returned**: 54
 - 🔍 **Documents examined**: 664
-- 🛠️ **Execution stage**: COLLSCAN
+- 🛠️ **Execution stage**: PROJECTION_SIMPLE
 
 ## 🚨 Performance Issues
 
@@ -58,44 +58,41 @@
 
 6. ## 📊 Query Performance Report
 
-- 🧪 **Query**: `db.restaurants.find({ borough: "Bronx" }).limit(5)`
+- 🧪 **Query**: `db.restaurants.find({ borough: "Bronx" }, { _id: 0 }).limit(5)`
 - ⏱️ **Execution time**: 0 ms
 - 📚 **Documents returned**: 5
-- 🔍 **Documents examined**: 57
+- 🔍 **Documents examined**: 53
 - 🛠️ **Execution stage**: LIMIT
 
 ## 🚨 Performance Issues
 
 ### ⚠️ High Priority Issues
-- ⚠️ Examined 57 docs to return 5 (ratio 11.4:1)
+- ⚠️ Examined 53 docs to return 5 (ratio 10.6:1)
 
 
 7. ## 📊 Query Performance Report
 
-- 🧪 **Query**: `db.restaurants.find({ borough: "Bronx" }).skip(5).limit(5)`
+- 🧪 **Query**: `db.restaurants.find({ borough: "Bronx" }, { _id: 0 }).skip(5).limit(5)`
 - ⏱️ **Execution time**: 0 ms
 - 📚 **Documents returned**: 5
-- 🔍 **Documents examined**: 157
+- 🔍 **Documents examined**: 153
 - 🛠️ **Execution stage**: LIMIT
 
 ## 🚨 Performance Issues
 
 ### ⚠️ High Priority Issues
-- ⚠️ Examined 157 docs to return 5 (ratio 31.4:1)
+- ⚠️ Examined 153 docs to return 5 (ratio 30.6:1)
 
 
 8. ## 📊 Query Performance Report
 
-- 🧪 **Query**: `db.restaurants.find({ "grades.score": { $gt: 90 } })`
+- 🧪 **Query**: `db.restaurants.find({ "grades.score": { $gt: 90 } }, { _id: 0 })`
 - ⏱️ **Execution time**: 2 ms
 - 📚 **Documents returned**: 2
 - 🔍 **Documents examined**: 664
-- 🛠️ **Execution stage**: COLLSCAN
+- 🛠️ **Execution stage**: PROJECTION_SIMPLE
 
 ## 🚨 Performance Issues
-
-### 🔥 Critical Issues
-- 🚨 Full collection scan detected where index could be used
 
 ### ⚠️ High Priority Issues
 - ⚠️ Examined 664 docs to return 2 (ratio 332.0:1)
@@ -112,11 +109,11 @@ db.restaurants.createIndex({ grades.score: 1 });
 
 9. ## 📊 Query Performance Report
 
-- 🧪 **Query**: `db.restaurants.find({grades: {$elemMatch: { score: { $gt: 80, $lt: 100 } }}})`
-- ⏱️ **Execution time**: 2 ms
+- 🧪 **Query**: `db.restaurants.find({ grades: { $elemMatch: { score: { $gt: 80, $lt: 100 } } } }, { _id: 0 })`
+- ⏱️ **Execution time**: 1 ms
 - 📚 **Documents returned**: 1
 - 🔍 **Documents examined**: 664
-- 🛠️ **Execution stage**: COLLSCAN
+- 🛠️ **Execution stage**: PROJECTION_SIMPLE
 
 ## 🚨 Performance Issues
 
@@ -126,27 +123,24 @@ db.restaurants.createIndex({ grades.score: 1 });
 
 10. ## 📊 Query Performance Report
 
-- 🧪 **Query**: `db.restaurants.find({"location.coordinates.0": { $lt: -95.754168 }})`
-- ⏱️ **Execution time**: 1 ms
+- 🧪 **Query**: `db.restaurants.find({ "location.coordinates.0": { $lt: -95.754168 } }, { _id: 0 })`
+- ⏱️ **Execution time**: 0 ms
 - 📚 **Documents returned**: 0
 - 🔍 **Documents examined**: 664
-- 🛠️ **Execution stage**: COLLSCAN
+- 🛠️ **Execution stage**: PROJECTION_SIMPLE
 
 ## ✅ No significant issues detected
 
 
 11. ## 📊 Query Performance Report
 
-- 🧪 **Query**: `db.restaurants.find({cuisine: { $ne: "American" },"grades.score": { $gt: 70 },"location.coordinates.0": { $lt: -65.754168 }})`
+- 🧪 **Query**: `db.restaurants.find({cuisine: { $ne: "American" },"grades.score": { $gt: 70 },"location.coordinates.0": { $lt: -65.754168 }}, { _id: 0 })`
 - ⏱️ **Execution time**: 1 ms
 - 📚 **Documents returned**: 1
 - 🔍 **Documents examined**: 664
-- 🛠️ **Execution stage**: COLLSCAN
+- 🛠️ **Execution stage**: PROJECTION_SIMPLE
 
 ## 🚨 Performance Issues
-
-### 🔥 Critical Issues
-- 🚨 Full collection scan detected where index could be used
 
 ### ⚠️ High Priority Issues
 - ⚠️ Examined 664 docs to return 1 (ratio 664.0:1)
@@ -165,16 +159,13 @@ db.restaurants.createIndex({ grades.score: 1 });
 
 12. ## 📊 Query Performance Report
 
-- 🧪 **Query**: `db.restaurants.find({cuisine: { $ne: "American" },"grades.score": { $gt: 70 },"location.coordinates.0": { $lt: -65.754168 }})`
-- ⏱️ **Execution time**: 1 ms
+- 🧪 **Query**: `db.restaurants.find({cuisine: { $ne: "American" },"grades.score": { $gt: 70 },"location.coordinates.0": { $lt: -65.754168 }}, { _id: 0 })`
+- ⏱️ **Execution time**: 2 ms
 - 📚 **Documents returned**: 1
 - 🔍 **Documents examined**: 664
-- 🛠️ **Execution stage**: COLLSCAN
+- 🛠️ **Execution stage**: PROJECTION_SIMPLE
 
 ## 🚨 Performance Issues
-
-### 🔥 Critical Issues
-- 🚨 Full collection scan detected where index could be used
 
 ### ⚠️ High Priority Issues
 - ⚠️ Examined 664 docs to return 1 (ratio 664.0:1)
@@ -193,7 +184,7 @@ db.restaurants.createIndex({ grades.score: 1 });
 
 13. ## 📊 Query Performance Report
 
-- 🧪 **Query**: `db.restaurants.find({cuisine: { $ne: "American" },borough: { $ne: "Brooklyn" },"grades.grade": "A"}).sort({ cuisine: -1 })`
+- 🧪 **Query**: `db.restaurants.find({cuisine: { $ne: "American" }, borough: { $ne: "Brooklyn" },"grades.grade": "A"}, { _id: 0 }).sort({ cuisine: -1 })`
 - ⏱️ **Execution time**: 1 ms
 - 📚 **Documents returned**: 318
 - 🔍 **Documents examined**: 664
@@ -255,11 +246,11 @@ db.restaurants.createIndex({ cuisine: 1 });
 
 17. ## 📊 Query Performance Report
 
-- 🧪 **Query**: `db.restaurants.find({ borough: "Bronx", $or: [{ cuisine: "American" }, { cuisine: "Chinese" }] })`
-- ⏱️ **Execution time**: 0 ms
+- 🧪 **Query**: `db.restaurants.find({ borough: "Bronx", $or: [{ cuisine: "American" }, { cuisine: "Chinese" }]}, { _id: 0 })`
+- ⏱️ **Execution time**: 1 ms
 - 📚 **Documents returned**: 22
 - 🔍 **Documents examined**: 664
-- 🛠️ **Execution stage**: COLLSCAN
+- 🛠️ **Execution stage**: PROJECTION_SIMPLE
 
 ## 🚨 Performance Issues
 
@@ -281,7 +272,7 @@ db.restaurants.createIndex({ cuisine: 1 });
 19. ## 📊 Query Performance Report
 
 - 🧪 **Query**: `db.restaurants.find({ borough: { $nin: ["Staten Island", "Queens", "Bronx", "Brooklyn"] } }, { _id: 0, restaurant_id: 1, name: 1, borough: 1, cuisine: 1 })`
-- ⏱️ **Execution time**: 0 ms
+- ⏱️ **Execution time**: 1 ms
 - 📚 **Documents returned**: 305
 - 🔍 **Documents examined**: 664
 - 🛠️ **Execution stage**: PROJECTION_SIMPLE
